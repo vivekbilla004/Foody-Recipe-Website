@@ -23,7 +23,15 @@ function App() {
     path: "/",
     element : <LandingPage/> ,
      loader: getAllRecipes
-  }
+  },
+  {
+    path: "/favrouteRecipe",
+    element : <LandingPage/> ,
+  },
+  {
+    path: "/myRecipe",
+    element : <LandingPage/> ,
+  },
 ])
 
   return (

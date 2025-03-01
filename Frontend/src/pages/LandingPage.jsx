@@ -1,7 +1,7 @@
 import React from 'react'
 import CardsPage from './CardsPage'
 import Home from "./Home"
-import Navbar from '../components/NavBar'
+import Navbar from '../components/Navbar'
 import { useLoaderData } from 'react-router-dom'
 
 const LandingPage = () => {
