@@ -4,6 +4,7 @@ import './App.css'
 import axios from "axios"
 
 import LandingPage from './pages/LandingPage'
+import AddRecipe from './pages/AddRecipe'
 
 
 
@@ -15,6 +16,12 @@ function App() {
       allRecipes = res.data
     })
     return allRecipes
+  }
+
+  const getMyRecipe =async() => {
+    let user = JSON.parse(localStorage.getItem("user"))
+    let allRecipes = await getAllRecipes()
+    allRecipes.filter(item => item.createdBy === user._id) 
   }
 
 
@@ -29,8 +36,13 @@ function App() {
     element : <LandingPage/> ,
   },
   {
-    path: "/myRecipe",
+    path: "/myrecipe",
     element : <LandingPage/> ,
+    loader: getMyRecipe
+  },
+  {
+    path: "/addrecipe",
+    element : <AddRecipe/> ,
   },
 ])
 

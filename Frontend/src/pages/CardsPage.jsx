@@ -6,7 +6,7 @@ const CardsPage = ({allRecipesData}) => {
 
 
   return (
-    <div className="flex flex-wrap justify-center  bg-blue-950 text-black  min-h-screen">
+    <div className="flex flex-wrap justify-center  bg-blue-950 text-black  min-h-screen ">
       {/* Card components will be added here later */}
       {allRecipesData.map((recipe,index)=> 
       <Recipe 

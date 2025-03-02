@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import InputDialog from "./InputDialog";
 import { NavLink } from "react-router-dom";
 
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSignIn, setSignIn] = useState(true);
+  // const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     let storedToken = localStorage.getItem("token");
@@ -47,13 +47,14 @@ const Navbar = () => {
           className="cursor-pointer hover:text-gray-300 transition duration-300"
           onClick={() => isSignIn && setIsOpen(true)}
         >
-          <NavLink to={isSignIn ? "/MyRecipe" : "/"}>My Recipe</NavLink>
+          <NavLink to={isSignIn ? "/Myrecipe" : "/"}>My Recipe</NavLink>
         </li>
         <li
           className="cursor-pointer hover:text-gray-300 transition duration-300"
           onClick={checkLogin}
         >
-          {isSignIn ? "SignIn" : "SignOut"}
+          {isSignIn ? "SignIn" : "SignOut"} :   
+  
         </li>
       </ul>
 
@@ -63,6 +64,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
 
 // onClick={()=>{setIsOpen(true)}}
