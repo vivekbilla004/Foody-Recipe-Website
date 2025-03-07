@@ -18,18 +18,30 @@ function App() {
     return allRecipes
   }
 
-  const getMyRecipe =async() => {
-    let user = JSON.parse(localStorage.getItem("user"))
-    let allRecipes = await getAllRecipes()
-    allRecipes.filter(item => item.createdBy === user._id) 
-  }
+  const getMyRecipe = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user")); 
+  
+      if (!user || !user._id) {
+        console.warn("No user found in localStorage");
+        return []; // ✅ Return empty array instead of crashing
+      }
+  
+      const allRecipes = await getAllRecipes();
+      return allRecipes.filter((item) => item.createdBy === user._id);
+    } catch (error) {
+      console.error("Error fetching user recipes:", error);
+      return [];
+    }
+  };
+  
 
 
 
   const router = createBrowserRouter([{
     path: "/",
     element : <LandingPage/> ,
-     loader: getAllRecipes
+     loader: getAllRecipes ,
   },
   {
     path: "/favrouteRecipe",
@@ -38,7 +50,7 @@ function App() {
   {
     path: "/myrecipe",
     element : <LandingPage/> ,
-    loader: getMyRecipe
+    loader: getMyRecipe ,
   },
   {
     path: "/addrecipe",

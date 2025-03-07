@@ -24,7 +24,7 @@ const LandingPage = () => {
     <div className="w-screen overflow-x-hidden">
       <Navbar />
       <Home scrollToCards={scrollToCards}/>
-      <div ref={cardsRef}> 
+      <div ref={cardsRef}>
       <CardsPage allRecipesData={allRecipes} />
       </div>
     </div>

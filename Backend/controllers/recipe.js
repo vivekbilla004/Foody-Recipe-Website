@@ -1,59 +1,64 @@
-const Recipes = require("../models/recipe")
+const Recipe = require('../models/Recipe')
 
-// const multer  = require('multer')
+const multer  = require('multer')
 
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, './public/images')
-//     },
-//     filename: function (req, file, cb) {
-//       const filename= Date.now() + '-' + file.fieldname
-//       cb(null, filename)
-//     }
-//   })
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './public/images')
+    },
+    filename: function (req, file, cb) {
+      const filename= Date.now() + '-' + file.fieldname
+      cb(null, filename)
+    }
+  })
   
-//   const upload = multer({ storage: storage })
+  const upload = multer({ storage: storage })
 
 const getRecipe = async(req,res)=>{
-    const recipe = await Recipes.find()
-    return res.json(recipe)
+    const recipes = await Recipe.find()
+    return res.json(recipes)
 }
 
 const getRecipeByID = async(req,res)=>{
-   const recipeById = await Recipes.findById(req.params.id)
+   const recipeById = await Recipe.findById(req.params.id)
    return res.json(recipeById)
 }
+
 const addRecipe = async (req, res) => {
     try {
-        // console.log(req.user);
-        // console.log(req.file)
+        console.log(req.user);
+        console.log("📥 Received Data:", JSON.stringify(req.body, null, 2));
+        console.log("📂 Received File:", req.file ? req.file.filename : "No file received");
 
         const { title, ingredients, instructions, time, coverImage } = req.body;
 
-        // Check for missing fields and return immediately
-        if (!title || !ingredients || !instructions || !time || !coverImage) {
-            return res.json({ message: "Required field can't be empty" });  // ✅ Added return to stop further execution
+        if (!title || !ingredients || !instructions || !time) {
+            return res.status(400).json({ message: "Required fields can't be empty" });
         }
+        const formattedIngredients = Array.isArray(ingredients) ? ingredients : JSON.parse(ingredients);
 
-        const newRecipe = await Recipes.create({
+        const newRecipe = await Recipe.create({
             title,
-            ingredients,
+            ingredients: formattedIngredients,
             instructions,
             time,
-            coverImage 
-            // createdBy : req.user.id
+            coverImage : req.file.filename ,
+            createdBy: req.user.id
         });
 
-        return res.json(newRecipe); 
+        console.log("✅ Recipe Successfully Saved:", newRecipe);
+        return res.status(201).json(newRecipe);
     } catch (error) {
-        console.error("Error in addRecipe:", error);  
+        console.error("❌ Error in addRecipe:", error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
+
+
 const updateRecipeById = async(req,res)=>{
     const{title , ingredients , instructions , time , coverImage} = req.body;
-    let recipe = await Recipes.findById(req.params.id)
+    let recipe = await Recipe.findById(req.params.id)
     if(recipe) {
         await Recipes.findByIdAndUpdate(req.params.id,req.body,{new:true})
         res.json({title , ingredients , instructions , time , coverImage})
@@ -63,5 +68,6 @@ const deleteRecipeById = (req,res)=>{
     res.json({message:"hello namaste"})
 }
 
-module.exports= {getRecipe,getRecipeByID,addRecipe,updateRecipeById,deleteRecipeById};
+module.exports = {getRecipe,getRecipeByID,addRecipe,updateRecipeById,deleteRecipeById , upload };
+
 

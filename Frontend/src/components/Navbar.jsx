@@ -1,22 +1,22 @@
+
 import React, { useEffect, useState } from "react";
 import InputDialog from "./InputDialog";
 import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isSignIn, setSignIn] = useState(true);
-  // const user = JSON.parse(localStorage.getItem("user"));
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
-    let storedToken = localStorage.getItem("token");
-    setSignIn(!storedToken);
+    const storedToken = localStorage.getItem("token");
+    setIsSignedIn(!!storedToken); 
   }, []);
 
-  const checkLogin = () => {
-    if (localStorage.getItem("token")) {
+  const handleAuth = () => {
+    if (isSignedIn) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      setSignIn(true);
+      setIsSignedIn(false);
     } else {
       setIsOpen(true);
     }
@@ -37,24 +37,18 @@ const Navbar = () => {
         <li className="cursor-pointer hover:text-gray-300 transition duration-300">
           <NavLink to="/">Home</NavLink>
         </li>
-        <li
-          className="cursor-pointer hover:text-gray-300 transition duration-300"
-          onClick={() => isSignIn && setIsOpen(true)}
-        >
-          <NavLink to={isSignIn ? "/favrouteRecipe" : "/"}>Favorites</NavLink>
+        <li className="cursor-pointer hover:text-gray-300 transition duration-300">
+          <NavLink to={isSignedIn ? "/favrouteRecipe" : "#"} onClick={!isSignedIn ? () => setIsOpen(true) : undefined}>
+            Favorites
+          </NavLink>
         </li>
-        <li
-          className="cursor-pointer hover:text-gray-300 transition duration-300"
-          onClick={() => isSignIn && setIsOpen(true)}
-        >
-          <NavLink to={isSignIn ? "/Myrecipe" : "/"}>My Recipe</NavLink>
+        <li className="cursor-pointer hover:text-gray-300 transition duration-300">
+          <NavLink to={isSignedIn ? "/myrecipe" : "#"} onClick={!isSignedIn ? () => setIsOpen(true) : undefined}>
+            My Recipe
+          </NavLink>
         </li>
-        <li
-          className="cursor-pointer hover:text-gray-300 transition duration-300"
-          onClick={checkLogin}
-        >
-          {isSignIn ? "SignIn" : "SignOut"} :   
-  
+        <li className="cursor-pointer hover:text-gray-300 transition duration-300" onClick={handleAuth}>
+          {isSignedIn ? "Sign Out" : "Sign In"}
         </li>
       </ul>
 
@@ -65,4 +59,3 @@ const Navbar = () => {
 
 export default Navbar;
 
-// onClick={()=>{setIsOpen(true)}}
