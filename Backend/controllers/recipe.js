@@ -27,6 +27,7 @@ const getRecipeByID = async(req,res)=>{
 const addRecipe = async (req, res) => {
     try {
         console.log(req.user);
+        console.log(req.file)
         console.log("📥 Received Data:", JSON.stringify(req.body, null, 2));
         console.log("📂 Received File:", req.file ? req.file.filename : "No file received");
 
@@ -57,15 +58,22 @@ const addRecipe = async (req, res) => {
 
 
 const updateRecipeById = async(req,res)=>{
-    const{title , ingredients , instructions , time , coverImage} = req.body;
+    const{title , ingredients , instructions , time } = req.body;
     let recipe = await Recipe.findById(req.params.id)
     if(recipe) {
-        await Recipes.findByIdAndUpdate(req.params.id,req.body,{new:true})
-        res.json({title , ingredients , instructions , time , coverImage})
+        let coverImage = req.file ? req.file.filename : recipe.coverImage 
+        await Recipe.findByIdAndUpdate(req.params.id,{...req.body,coverImage},{new:true})
+        res.json({title , ingredients , instructions , time })
     }
 }
-const deleteRecipeById = (req,res)=>{
-    res.json({message:"hello namaste"})
+const deleteRecipeById = async(req,res)=>{
+    try{
+  await Recipe.deleteOne({_id:req.params.id})
+  res.json({status : "ok"})
+    }
+    catch(err){
+ return res.status(400).json({message:err.message})
+    }
 }
 
 module.exports = {getRecipe,getRecipeByID,addRecipe,updateRecipeById,deleteRecipeById , upload };

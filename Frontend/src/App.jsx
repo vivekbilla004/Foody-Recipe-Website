@@ -5,6 +5,7 @@ import axios from "axios"
 
 import LandingPage from './pages/LandingPage'
 import AddRecipe from './pages/AddRecipe'
+import EditRecipe from './components/EditRecipe'
 
 
 
@@ -34,6 +35,10 @@ function App() {
       return [];
     }
   };
+
+  const getFavRecipes = () => {
+    return JSON.parse(localStorage.getItem("favItems"))
+  }
   
 
 
@@ -46,6 +51,7 @@ function App() {
   {
     path: "/favrouteRecipe",
     element : <LandingPage/> ,
+    loader: getFavRecipes ,
   },
   {
     path: "/myrecipe",
@@ -56,6 +62,11 @@ function App() {
     path: "/addrecipe",
     element : <AddRecipe/> ,
   },
+  {
+    path: "/editrecipe/:id",
+    element : <EditRecipe/> ,
+  },
+  
 ])
 
   return (

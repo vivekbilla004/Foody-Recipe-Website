@@ -37,7 +37,7 @@ const InputDialog = ({ onClose }) => {
   }, [onClose]);
 
   return (
-    <div className="fixed  right-0 top-0 mr-144 mt-7 rounded-md bg-blend-color-dodge backdrop-blur-sm flex justify-end">
+    <div className="fixed  right-0 top-0 mr-144 mt-4 h-[285px] rounded-md bg-blend-color-dodge backdrop-blur-sm flex justify-end">
       {/* Sliding Panel */}
       <motion.div
         initial={{ x: "100%" }}

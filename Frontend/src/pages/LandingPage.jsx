@@ -10,13 +10,13 @@ const LandingPage = () => {
   console.log(allRecipes);
   const cardsRef = useRef(null);
 
-  // Function to scroll to CardsPage
+ 
   const scrollToCards = () => {
     setTimeout(() => {
       if (cardsRef.current) {
         cardsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-    }, 100); // Small delay to ensure smooth scroll
+    }, 100); 
   };
 
 

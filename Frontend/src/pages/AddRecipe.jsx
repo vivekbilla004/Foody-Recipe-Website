@@ -7,66 +7,59 @@ const AddRecipe = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-
-    if (name === "coverImage") {
-        setRecipesData((prev) => ({
-            ...prev,
-            coverImage: files[0], 
-        }));
-    } else if (name === "ingredients") {
-        setRecipesData((prev) => ({
-            ...prev,
-            ingredients: value.split(",").map((item) => item.trim()), 
-        }));
+    if (e.target.name === "ingredients") {
+      setRecipesData((prev) => ({ ...prev, ingredients: e.target.value.split(",") }));
+    } else if (e.target.name === "coverImage") {
+      if (e.target.files.length > 0) {
+        console.log("📸 File Selected:", e.target.files[0]); // Debugging line
+        setRecipesData((prev) => ({ ...prev, coverImage: e.target.files[0] }));
+      } else {
+        console.error("❌ No file selected");
+      }
     } else {
-        setRecipesData((prev) => ({
-            ...prev,
-            [name]: value, 
-        }));
+      setRecipesData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     }
-};
+  };
+  
 
 const onHandleSubmit = async (e) => {
   e.preventDefault();
 
-  console.log("📤 Sending Data:", recipesData);
-
-  // Ensure all required fields are present
-  if (!recipesData.title || !recipesData.ingredients?.length || !recipesData.instructions || !recipesData.time || !recipesData.coverImage) {
-      console.error("❌ Missing required fields:", recipesData);
-      alert("Please fill all required fields before submitting.");
-      return;
-  }
-
-  //Create FormData and append fields properly
   const formData = new FormData();
   formData.append("title", recipesData.title);
-  formData.append("ingredients", JSON.stringify(recipesData.ingredients));
+  formData.append("ingredients", JSON.stringify(recipesData.ingredients)); // Convert to string
   formData.append("instructions", recipesData.instructions);
   formData.append("time", recipesData.time);
-  formData.append("coverImage", recipesData.coverImage); 
 
-  // Debugging: Log FormData
-  for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
+  //  Ensure the file is appended properly
+  if (recipesData.coverImage) {
+    formData.append("coverImage", recipesData.coverImage);
+  } else {
+    console.error("❌ No file selected");
+    return; // Prevent submission if no file is selected
+  }
+
+  // 🛠 Debugging: Log FormData content before sending
+  for (let pair of formData.entries()) {
+    console.log(`📤 ${pair[0]}:`, pair[1]);
   }
 
   try {
-      const response = await axios.post("http://localhost:8000/recipes", formData, {
-          headers: { "Content-Type": "multipart/form-data" ,
-            "Authorization" :"bearer " + localStorage.getItem("token")
-           },
+    await axios.post("http://localhost:8000/recipes/", formData, {
+      headers: { 
+        "Content-Type": "multipart/form-data",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    });
 
-      });
-
-      console.log("✅ Recipe successfully added:", response.data);
-      navigate("/");
+    navigate("/"); // Redirect on success
   } catch (error) {
-      console.error("❌ Error submitting recipe:", error.response?.data || error);
-      alert("Error submitting recipe. Check the console for details.");
+    console.error("❌ Error:", error.response ? error.response.data : error.message);
   }
 };
+
+
+
 
 
   return (
@@ -131,9 +124,6 @@ export default AddRecipe;
 
 
 
-// {
-//   headers: {
-//     "Content-Type": " multipart/form-data",
-//     "authorization": "Bearer " + localStorage.getItem("token"),
-//   },
-// }
+
+
+
