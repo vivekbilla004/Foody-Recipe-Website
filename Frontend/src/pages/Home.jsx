@@ -27,10 +27,6 @@ const Home = ({ scrollToCards }) => {
               Discover the best Recipes and enjoy amazing deals.
             </p>
             <div className=" flex gap-4    justify-center items-center p-4">
-              <input
-                className="p-3 bg-orange-600 hover:bg-orange-700 text-white font-bold  rounded-lg shadow-lg transition duration-300"
-                placeholder="Search here"
-              />
               <button
                 className="p-3 text-white bg-black  hover:bg-gray-800 font-bold rounded-md shadow-lg transition duration-300 "
                 onClick={handleAdRecipe}

@@ -10,7 +10,7 @@ const LandingPage = () => {
   console.log(allRecipes);
   const cardsRef = useRef(null);
 
- 
+  // Function to scroll to CardsPage
   const scrollToCards = () => {
     setTimeout(() => {
       if (cardsRef.current) {
